@@ -102,92 +102,98 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
             $recordertype=OP_REPLYMP3VOICE;
         }
 
-		$boardsize = $this->get_config('boardsize');
-		$backimage = $this->get_config('backimage');
-		$timelimit = $this->get_config('timelimit');
-      
-      
-       //get allowed recorders from admin settings
-		$allowed_recorders = get_config('assignsubmission_onlinepoodll', 'allowedrecorders');
-		$allowed_recorders  = explode(',',$allowed_recorders);
-		$recorderoptions = array();
-		if(array_search(OP_REPLYMP3VOICE,$allowed_recorders)!==false || array_search(OP_REPLYVOICE,$allowed_recorders)!==false){
-			$recorderoptions[OP_REPLYMP3VOICE] = get_string("replymp3voice", "assignsubmission_onlinepoodll");
-		}
+        $boardsize = $this->get_config('boardsize');
+        $backimage = $this->get_config('backimage');
+        $timelimit = $this->get_config('timelimit');
 
-		if(array_search(OP_REPLYVIDEO ,$allowed_recorders)!==false){
-			$recorderoptions[OP_REPLYVIDEO ] = get_string("replyvideo", "assignsubmission_onlinepoodll");
-		}
-		if(array_search(OP_REPLYWHITEBOARD,$allowed_recorders)!==false){
-			$recorderoptions[OP_REPLYWHITEBOARD ] = get_string("replywhiteboard", "assignsubmission_onlinepoodll");
-		}
-		if(array_search(OP_REPLYSNAPSHOT,$allowed_recorders)!==false){
-			$recorderoptions[OP_REPLYSNAPSHOT] = get_string("replysnapshot", "assignsubmission_onlinepoodll");
-		}
 
-        
-		$mform->addElement('select', 'assignsubmission_onlinepoodll_recordertype', get_string("recordertype", "assignsubmission_onlinepoodll"), $recorderoptions);
+        //get allowed recorders from admin settings
+        $allowed_recorders = get_config('assignsubmission_onlinepoodll', 'allowedrecorders');
+        $allowed_recorders  = explode(',',$allowed_recorders);
+        $recorderoptions = array();
+        if(array_search(OP_REPLYMP3VOICE,$allowed_recorders)!==false || array_search(OP_REPLYVOICE,$allowed_recorders)!==false){
+            $recorderoptions[OP_REPLYMP3VOICE] = get_string("replymp3voice", "assignsubmission_onlinepoodll");
+        }
+
+        if(array_search(OP_REPLYVIDEO ,$allowed_recorders)!==false){
+            $recorderoptions[OP_REPLYVIDEO ] = get_string("replyvideo", "assignsubmission_onlinepoodll");
+        }
+        if(array_search(OP_REPLYWHITEBOARD,$allowed_recorders)!==false){
+            $recorderoptions[OP_REPLYWHITEBOARD ] = get_string("replywhiteboard", "assignsubmission_onlinepoodll");
+        }
+        if(array_search(OP_REPLYSNAPSHOT,$allowed_recorders)!==false){
+            $recorderoptions[OP_REPLYSNAPSHOT] = get_string("replysnapshot", "assignsubmission_onlinepoodll");
+        }
+
+
+        $mform->addElement('select', 'assignsubmission_onlinepoodll_recordertype', get_string("recordertype", "assignsubmission_onlinepoodll"), $recorderoptions);
         //$mform->addHelpButton('assignsubmission_onlinepoodll_recordertype', get_string('onlinepoodll', ASSIGNSUBMISSION_ONLINEPOODLL_COMPONENT), ASSIGNSUBMISSION_ONLINEPOODLL_COMPONENT);
         $mform->setDefault('assignsubmission_onlinepoodll_recordertype', $recordertype);
-		$mform->disabledIf('assignsubmission_onlinepoodll_recordertype', 'assignsubmission_onlinepoodll_enabled', 'eq', 0);
+        //$mform->disabledIf('assignsubmission_onlinepoodll_recordertype', 'assignsubmission_onlinepoodll_enabled', 'eq', 0);
+        $mform->hideIf('assignsubmission_onlinepoodll_recordertype', 'assignsubmission_onlinepoodll_enabled', 'notchecked');
 
-		//Add a place to set a maximum recording time.
-	   $mform->addElement('duration', 'assignsubmission_onlinepoodll_timelimit', get_string('timelimit', 'assignsubmission_onlinepoodll'));    
-       $mform->setDefault('assignsubmission_onlinepoodll_timelimit', $timelimit);
-		$mform->disabledIf('assignsubmission_onlinepoodll_timelimit', 'assignsubmission_onlinepoodll_enabled', 'eq', 0);
-		$mform->disabledIf('assignsubmission_onlinepoodll_timelimit', 'assignsubmission_onlinepoodll_recordertype', 'eq', OP_REPLYWHITEBOARD);
-		$mform->disabledIf('assignsubmission_onlinepoodll_timelimit', 'assignsubmission_onlinepoodll_recordertype', 'eq', OP_REPLYSNAPSHOT);
-	  
-	  //these are for the whiteboard submission
-	  // added Justin 20121216 back image, and boardsizes, part of whiteboard response
-		//For the back image, we 
-		//(i) first have to load existing back image files into a draft area
-		// (ii) add a file manager element
-		//(iii) set the draft area info as the "default" value for the file manager
-		if(array_search(OP_REPLYWHITEBOARD,$allowed_recorders)!==false){
-			$itemid = 0;
-			$draftitemid = file_get_submitted_draft_itemid(ASSIGNSUBMISSION_ONLINEPOODLL_WB_FILEAREA);
-			$context =  $this->assignment->get_context();
-			if($context) {
-				$contextid = $context->id;
-			}else{
-				$contextid = 0;
-			}
-			file_prepare_draft_area($draftitemid, $contextid, ASSIGNSUBMISSION_ONLINEPOODLL_CONFIG_COMPONENT, ASSIGNSUBMISSION_ONLINEPOODLL_WB_FILEAREA, 
-			$itemid,
-			array('subdirs' => 0, 'maxbytes' => 0, 'maxfiles' => 1));
-			$mform->addElement('filemanager', 'backimage', get_string('backimage', 'assignsubmission_onlinepoodll'), null,array('subdirs' => 0, 'maxbytes' => 0, 'maxfiles' => 1));
-			$mform->setDefault('backimage', $backimage);
-			//commented 20130120 bcause was broken with moodle 2.6. Errors saying "must attach no more than one file" when tried to save, empty, disabled
-			//$mform->disabledIf('backimage', 'assignsubmission_onlinepoodll_enabled', 'eq', 0);
-			//$mform->disabledIf('backimage', 'assignsubmission_onlinepoodll_recordertype', 'ne', OP_REPLYWHITEBOARD );
-		}else{
-			$mform->addElement('hidden', 'backimage',$backimage);
-		}
-		$mform->setType('backimage', PARAM_INT);
+        //Add a place to set a maximum recording time.
+        $mform->addElement('duration', 'assignsubmission_onlinepoodll_timelimit', get_string('timelimit', 'assignsubmission_onlinepoodll'));
+        $mform->setDefault('assignsubmission_onlinepoodll_timelimit', $timelimit);
+        // START UCLA MOD: CCLE-7189 - Converted js functionality to Jquery for simplify assignment settings
+        //$mform->disabledIf('assignsubmission_onlinepoodll_timelimit', 'assignsubmission_onlinepoodll_enabled', 'eq', 0);
+        //$mform->disabledIf('assignsubmission_onlinepoodll_timelimit', 'assignsubmission_onlinepoodll_recordertype', 'eq', OP_REPLYWHITEBOARD);
+        //$mform->disabledIf('assignsubmission_onlinepoodll_timelimit', 'assignsubmission_onlinepoodll_recordertype', 'eq', OP_REPLYSNAPSHOT);
+        $mform->hideIf('assignsubmission_onlinepoodll_timelimit', 'assignsubmission_onlinepoodll_enabled', 'notchecked');
+        $mform->hideIf('assignsubmission_onlinepoodll_timelimit', 'assignsubmission_onlinepoodll_recordertype', 'eq', OP_REPLYWHITEBOARD);
+        $mform->hideIf('assignsubmission_onlinepoodll_timelimit', 'assignsubmission_onlinepoodll_recordertype', 'eq', OP_REPLYSNAPSHOT);
+        // END UCLA MOD: CCLE-7189
 
-		
-		//board sizes
-		if(array_search(OP_REPLYWHITEBOARD,$allowed_recorders)!==false){
-			$boardsizes = array(
-				'320x320' => '320x320',
-				'400x600' => '400x600',
-				'500x500' => '500x500',
-				'600x400' => '600x400',
-				'600x800' => '600x800',
-				'800x600' => '800x600',
-				'1000x800' => '1000x800',
-				'1024x768' => '1024x768'
-				);
-			$mform->addElement('select', 'assignsubmission_onlinepoodll_boardsize',
-				get_string('boardsize', 'assignsubmission_onlinepoodll'), $boardsizes);
-			$mform->setDefault('assignsubmission_onlinepoodll_boardsize', $boardsize);
-			$mform->disabledIf('assignsubmission_onlinepoodll_boardsize', 'assignsubmission_onlinepoodll_enabled', 'eq', 0);
-			$mform->disabledIf('assignsubmission_onlinepoodll_boardsize', 'assignsubmission_onlinepoodll_recordertype', 'ne', OP_REPLYWHITEBOARD );
-		}else{
-			$mform->addElement('hidden', 'assignsubmission_onlinepoodll_boardsize',$boardsize);
-		}
-		$mform->setType('assignsubmission_onlinepoodll_boardsize', PARAM_TEXT);
+        //these are for the whiteboard submission
+        // added Justin 20121216 back image, and boardsizes, part of whiteboard response
+        //For the back image, we
+        //(i) first have to load existing back image files into a draft area
+        // (ii) add a file manager element
+        //(iii) set the draft area info as the "default" value for the file manager
+        if(array_search(OP_REPLYWHITEBOARD,$allowed_recorders)!==false){
+            $itemid = 0;
+            $draftitemid = file_get_submitted_draft_itemid(ASSIGNSUBMISSION_ONLINEPOODLL_WB_FILEAREA);
+            $context =  $this->assignment->get_context();
+            if($context) {
+                    $contextid = $context->id;
+            }else{
+                    $contextid = 0;
+            }
+            file_prepare_draft_area($draftitemid, $contextid, ASSIGNSUBMISSION_ONLINEPOODLL_CONFIG_COMPONENT, ASSIGNSUBMISSION_ONLINEPOODLL_WB_FILEAREA,
+            $itemid,
+            array('subdirs' => 0, 'maxbytes' => 0, 'maxfiles' => 1));
+            $mform->addElement('filemanager', 'backimage', get_string('backimage', 'assignsubmission_onlinepoodll'), null,array('subdirs' => 0, 'maxbytes' => 0, 'maxfiles' => 1));
+            $mform->setDefault('backimage', $backimage);
+            //commented 20130120 bcause was broken with moodle 2.6. Errors saying "must attach no more than one file" when tried to save, empty, disabled
+            //$mform->disabledIf('backimage', 'assignsubmission_onlinepoodll_enabled', 'eq', 0);
+            //$mform->disabledIf('backimage', 'assignsubmission_onlinepoodll_recordertype', 'ne', OP_REPLYWHITEBOARD );
+        }else{
+            $mform->addElement('hidden', 'backimage',$backimage);
+        }
+        $mform->setType('backimage', PARAM_INT);
+
+
+        //board sizes
+        if(array_search(OP_REPLYWHITEBOARD,$allowed_recorders)!==false){
+            $boardsizes = array(
+                    '320x320' => '320x320',
+                    '400x600' => '400x600',
+                    '500x500' => '500x500',
+                    '600x400' => '600x400',
+                    '600x800' => '600x800',
+                    '800x600' => '800x600',
+                    '1000x800' => '1000x800',
+                    '1024x768' => '1024x768'
+                    );
+            $mform->addElement('select', 'assignsubmission_onlinepoodll_boardsize',
+                    get_string('boardsize', 'assignsubmission_onlinepoodll'), $boardsizes);
+            $mform->setDefault('assignsubmission_onlinepoodll_boardsize', $boardsize);
+            $mform->disabledIf('assignsubmission_onlinepoodll_boardsize', 'assignsubmission_onlinepoodll_enabled', 'eq', 0);
+            $mform->disabledIf('assignsubmission_onlinepoodll_boardsize', 'assignsubmission_onlinepoodll_recordertype', 'ne', OP_REPLYWHITEBOARD );
+        }else{
+            $mform->addElement('hidden', 'assignsubmission_onlinepoodll_boardsize',$boardsize);
+        }
+        $mform->setType('assignsubmission_onlinepoodll_boardsize', PARAM_TEXT);
 
     }
     

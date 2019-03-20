@@ -112,9 +112,14 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
 		//Add a place to set a maximum recording time.
 	   $mform->addElement('duration', constants::M_COMPONENT . '_timelimit', get_string('timelimit', constants::M_COMPONENT));
        $mform->setDefault(constants::M_COMPONENT . '_timelimit', $timelimit);
-		$mform->disabledIf(constants::M_COMPONENT . '_timelimit', constants::M_COMPONENT . '_enabled', 'notchecked');
-		$mform->disabledIf(constants::M_COMPONENT . '_timelimit', constants::M_COMPONENT . '_recordertype', 'eq', constants::M_REPLYWHITEBOARD);
-		$mform->disabledIf(constants::M_COMPONENT . '_timelimit', constants::M_COMPONENT . '_recordertype', 'eq', constants::M_REPLYSNAPSHOT);
+		// START UCLA MOD: CCLE-7189 - Converted js functionality to Jquery for simplify assignment settings
+		//$mform->disabledIf(constants::M_COMPONENT . '_timelimit', constants::M_COMPONENT . '_enabled', 'notchecked');
+		//$mform->disabledIf(constants::M_COMPONENT . '_timelimit', constants::M_COMPONENT . '_recordertype', 'eq', constants::M_REPLYWHITEBOARD);
+		//$mform->disabledIf(constants::M_COMPONENT . '_timelimit', constants::M_COMPONENT . '_recordertype', 'eq', constants::M_REPLYSNAPSHOT);
+		$mform->hideIf(constants::M_COMPONENT . '_timelimit', constants::M_COMPONENT . '_enabled', 'notchecked');
+		$mform->hideIf(constants::M_COMPONENT . '_timelimit', constants::M_COMPONENT . '_recordertype', 'eq', constants::M_REPLYWHITEBOARD);
+		$mform->hideIf(constants::M_COMPONENT . '_timelimit', constants::M_COMPONENT . '_recordertype', 'eq', constants::M_REPLYSNAPSHOT);
+		// END UCLA MOD: CCLE-7189
 	  
 	  //these are for the whiteboard submission
 	  // added Justin 20121216 back image, and boardsizes, part of whiteboard response

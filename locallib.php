@@ -138,29 +138,43 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
 		$mform->addElement('select', constants::M_COMPONENT . '_recordertype', get_string("recordertype", constants::M_COMPONENT), $recorderoptions);
         //$mform->addHelpButton(constants::M_COMPONENT . '_recordertype', get_string('onlinepoodll', constants::M_COMPONENT), constants::M_COMPONENT);
         $mform->setDefault(constants::M_COMPONENT . '_recordertype', $recordertype);
-		$mform->disabledIf(constants::M_COMPONENT . '_recordertype', constants::M_COMPONENT . '_enabled', 'notchecked');
+		// START UCLA MOD: CCLE-7189 - Converted js functionality to Jquery for simplify assignment settings
+		//$mform->disabledIf(constants::M_COMPONENT . '_recordertype', constants::M_COMPONENT . '_enabled', 'notchecked');
+		$mform->hideIf(constants::M_COMPONENT . '_recordertype', constants::M_COMPONENT . '_enabled', 'notchecked');
+		// END UCLA MOD: CCLE-7189
 
 
 		//Add a place to set a maximum recording time.
 	   $mform->addElement('duration', constants::M_COMPONENT . '_timelimit', get_string('timelimit', constants::M_COMPONENT));
        $mform->setDefault(constants::M_COMPONENT . '_timelimit', $timelimit);
-		$mform->disabledIf(constants::M_COMPONENT . '_timelimit', constants::M_COMPONENT . '_enabled', 'notchecked');
-		$mform->disabledIf(constants::M_COMPONENT . '_timelimit', constants::M_COMPONENT . '_recordertype', 'eq', constants::M_REPLYWHITEBOARD);
-		$mform->disabledIf(constants::M_COMPONENT . '_timelimit', constants::M_COMPONENT . '_recordertype', 'eq', constants::M_REPLYSNAPSHOT);
+		// START UCLA MOD: CCLE-7189 - Converted js functionality to Jquery for simplify assignment settings
+		//$mform->disabledIf(constants::M_COMPONENT . '_timelimit', constants::M_COMPONENT . '_enabled', 'notchecked');
+		//$mform->disabledIf(constants::M_COMPONENT . '_timelimit', constants::M_COMPONENT . '_recordertype', 'eq', constants::M_REPLYWHITEBOARD);
+		//$mform->disabledIf(constants::M_COMPONENT . '_timelimit', constants::M_COMPONENT . '_recordertype', 'eq', constants::M_REPLYSNAPSHOT);
+		$mform->hideIf(constants::M_COMPONENT . '_timelimit', constants::M_COMPONENT . '_enabled', 'notchecked');
+		$mform->hideIf(constants::M_COMPONENT . '_timelimit', constants::M_COMPONENT . '_recordertype', 'eq', constants::M_REPLYWHITEBOARD);
+		$mform->hideIf(constants::M_COMPONENT . '_timelimit', constants::M_COMPONENT . '_recordertype', 'eq', constants::M_REPLYSNAPSHOT);
+		// END UCLA MOD: CCLE-7189
 
 
 		$csoptions = utils::fetch_options_currentsubmission();
         $mform->addElement('select', constants::M_COMPONENT . '_showcurrentsubmission', get_string("currentsubmission", constants::M_COMPONENT), $csoptions);
         //$mform->addHelpButton(constants::M_COMPONENT . '_recordertype', get_string('onlinepoodll', constants::M_COMPONENT), constants::M_COMPONENT);
         $mform->setDefault(constants::M_COMPONENT . '_showcurrentsubmission', $currentsubmission);
-        $mform->disabledIf(constants::M_COMPONENT . '_showcurrentsubmission', constants::M_COMPONENT . '_enabled', 'notchecked');
+        // START UCLA MOD: CCLE-7189 - Converted js functionality to Jquery for simplify assignment settings
+        //$mform->disabledIf(constants::M_COMPONENT . '_showcurrentsubmission', constants::M_COMPONENT . '_enabled', 'notchecked');
+        $mform->hideIf(constants::M_COMPONENT . '_showcurrentsubmission', constants::M_COMPONENT . '_enabled', 'notchecked');
+        // END UCLA MOD: CCLE-7189
 
 
         $yesnooptions = utils::fetch_options_yesno();
         $mform->addElement('select', constants::M_COMPONENT . '_active', get_string("active", constants::M_COMPONENT), $yesnooptions);
         //$mform->addHelpButton(constants::M_COMPONENT . '_recordertype', get_string('onlinepoodll', constants::M_COMPONENT), constants::M_COMPONENT);
         $mform->setDefault(constants::M_COMPONENT . '_active', $active);
-        $mform->disabledIf(constants::M_COMPONENT . '_active', constants::M_COMPONENT . '_enabled', 'notchecked');
+        // START UCLA MOD: CCLE-7189 - Converted js functionality to Jquery for simplify assignment settings
+        //$mform->disabledIf(constants::M_COMPONENT . '_active', constants::M_COMPONENT . '_enabled', 'notchecked');
+        $mform->hideIf(constants::M_COMPONENT . '_active', constants::M_COMPONENT . '_enabled', 'notchecked');
+        // END UCLA MOD: CCLE-7189
         $mform->addHelpButton(constants::M_COMPONENT . '_active','active', constants::M_COMPONENT);
 
         //these are for the whiteboard submission
@@ -186,6 +200,9 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
 			//commented 20130120 bcause was broken with moodle 2.6. Errors saying "must attach no more than one file" when tried to save, empty, disabled
 			//$mform->disabledIf('backimage', constants::M_COMPONENT . '_enabled', 'eq', 0);
 			//$mform->disabledIf('backimage', constants::M_COMPONENT . '_recordertype', 'ne', constants::M_REPLYWHITEBOARD );
+			// START UCLA MOD: CCLE-7189 - Converted js functionality to Jquery for simplify assignment settings
+			$mform->hideIf('backimage', constants::M_COMPONENT . '_enabled', 'notchecked');
+			// END UCLA MOD: CCLE-7189
 		}else{
 			$mform->addElement('hidden', 'backimage',$backimage);
 		}
@@ -207,8 +224,12 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
 			$mform->addElement('select', constants::M_COMPONENT . '_boardsize',
 				get_string('boardsize', constants::M_COMPONENT), $boardsizes);
 			$mform->setDefault(constants::M_COMPONENT . '_boardsize', $boardsize);
-			$mform->disabledIf(constants::M_COMPONENT . '_boardsize', constants::M_COMPONENT . '_enabled', 'notchecked');
-			$mform->disabledIf(constants::M_COMPONENT . '_boardsize', constants::M_COMPONENT . '_recordertype', 'ne', constants::M_REPLYWHITEBOARD );
+			// START UCLA MOD: CCLE-7189 - Converted js functionality to Jquery for simplify assignment settings
+			//$mform->disabledIf(constants::M_COMPONENT . '_boardsize', constants::M_COMPONENT . '_enabled', 'notchecked');
+			//$mform->disabledIf(constants::M_COMPONENT . '_boardsize', constants::M_COMPONENT . '_recordertype', 'ne', constants::M_REPLYWHITEBOARD );
+			$mform->hideIf(constants::M_COMPONENT . '_boardsize', constants::M_COMPONENT . '_enabled', 'notchecked');
+			$mform->hideIf(constants::M_COMPONENT . '_boardsize', constants::M_COMPONENT . '_recordertype', 'ne', constants::M_REPLYWHITEBOARD );
+			// END UCLA MOD: CCLE-7189
 		}else{
 			$mform->addElement('hidden', constants::M_COMPONENT . '_boardsize',$boardsize);
 		}

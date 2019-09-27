@@ -79,7 +79,9 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
         global $CFG, $COURSE;
 
 
-        $mform->addElement('static',constants::M_COMPONENT . '_divider', '',get_string('divider',constants::M_COMPONENT,$this->get_name()));
+        // START UCLA MOD: CCLE-8698 - Upgrade PoodLL to 3.1.*
+        //$mform->addElement('static',constants::M_COMPONENT . '_divider', '',get_string('divider',constants::M_COMPONENT,$this->get_name()));
+        // END UCLA MOD: CCLE-8698
 
         $recordertype = $this->get_config('recordertype');
 
@@ -220,7 +222,9 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
 		}
 		$mform->setType(constants::M_COMPONENT . '_boardsize', PARAM_TEXT);
 
-        $mform->addElement('static',constants::M_COMPONENT . '_dividerend', '',get_string('divider',constants::M_COMPONENT,''));
+        // START UCLA MOD: CCLE-8698 - Upgrade PoodLL to 3.1.*
+        //$mform->addElement('static',constants::M_COMPONENT . '_dividerend', '',get_string('divider',constants::M_COMPONENT,''));
+        // END UCLA MOD: CCLE-8698
 
     }
     

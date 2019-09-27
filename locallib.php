@@ -90,10 +90,12 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
             $divider = get_string('divider',constants::M_COMPONENT,$pluginname);
         }
 
+        // START UCLA MOD: CCLE-8698 - Upgrade PoodLL to 3.1.*
         //If  M3.4 or lower we show a divider to make it easier to figure where poodll ends and starts
-        if($CFG->version < 2017111300) {
-            $mform->addElement('static', constants::M_COMPONENT . '_divider', '', $divider);
-        }
+        //if($CFG->version < 2017111300) {
+        //   $mform->addElement('static', constants::M_COMPONENT . '_divider', '', $divider);
+        //}
+        // END UCLA MOD: CCLE-8698
 
         $recordertype = $this->get_config('recordertype');
 
@@ -235,11 +237,13 @@ class assign_submission_onlinepoodll extends assign_submission_plugin {
 		}
 		$mform->setType(constants::M_COMPONENT . '_boardsize', PARAM_TEXT);
 
+        // START UCLA MOD: CCLE-8698 - Upgrade PoodLL to 3.1.*
         //If  M3.4 or lower we show a divider to make it easier to figure where poodll ends and starts
-        if($CFG->version < 2017111300) {
-            $mform->addElement('static', constants::M_COMPONENT . '_dividerend', '',
-                    get_string('divider', constants::M_COMPONENT, ''));
-        }
+        //if($CFG->version < 2017111300) {
+        //    $mform->addElement('static', constants::M_COMPONENT . '_dividerend', '',
+        //            get_string('divider', constants::M_COMPONENT, ''));
+        //}
+        // END UCLA MOD: CCLE-8698
 
         //If  M3.4 or higher we can hide unneeded elements
         if($CFG->version >= 2017111300) {
